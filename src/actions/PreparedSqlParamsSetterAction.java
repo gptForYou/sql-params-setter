@@ -7,8 +7,8 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.project.Project;
-import org.apache.commons.lang3.StringUtils;
 import util.SqlUtil;
+import util.StringUtil;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -24,7 +24,7 @@ import static constants.Const.SEPARATOR_PREPARING;
 public class PreparedSqlParamsSetterAction extends AnAction {
 
     private static final NotificationGroup NOTIFICATION_GROUP =
-            new NotificationGroup("SqlParamsSetter.NotificationGroup", NotificationDisplayType.BALLOON, true);
+            NotificationGroupManager.getInstance().getNotificationGroup("SqlParamsSetter.NotificationGroup");
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -41,7 +41,7 @@ public class PreparedSqlParamsSetterAction extends AnAction {
 
         SelectionModel model = editor.getSelectionModel();
         final String selectedMybatisLogs = model.getSelectedText();
-        if (StringUtils.isBlank(selectedMybatisLogs)) {
+        if (StringUtil.isBlank(selectedMybatisLogs)) {
             return;
         }
 
@@ -53,7 +53,7 @@ public class PreparedSqlParamsSetterAction extends AnAction {
             return;
         }
 
-        if (StringUtils.isBlank(sql)) {
+        if (StringUtil.isBlank(sql)) {
             notify(project, String.format(
                     "Selected area should contain both [%s] in the 1st line and [%s] in the 2nd line.",
                     SEPARATOR_PREPARING, SEPARATOR_PARAMETER), NotificationType.WARNING);

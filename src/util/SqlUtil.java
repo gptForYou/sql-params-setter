@@ -1,7 +1,7 @@
 package util;
 
 import bean.Parameter;
-import org.apache.commons.lang3.StringUtils;
+
 import org.hibernate.engine.jdbc.internal.BasicFormatterImpl;
 import org.hibernate.engine.jdbc.internal.Formatter;
 
@@ -45,8 +45,8 @@ public class SqlUtil {
      * @return formatted executable sql
      */
     public static String simpleFormat(String sql) {
-        if (StringUtils.isBlank(sql)) {
-            return StringUtils.EMPTY;
+        if (StringUtil.isBlank(sql)) {
+            return StringUtil.EMPTY;
         }
 
         for (Map.Entry<String, String> entry : SQL_FORMAT_KW.entrySet()) {
@@ -63,8 +63,8 @@ public class SqlUtil {
      * @return formatted executable sql
      */
     public static String format(String sql) {
-        if (StringUtils.isBlank(sql)) {
-            return StringUtils.EMPTY;
+        if (StringUtil.isBlank(sql)) {
+            return StringUtil.EMPTY;
         }
 
         sql = FORMATTER.format(sql);
@@ -83,15 +83,15 @@ public class SqlUtil {
      * @return an executable sql
      */
     public static String parse(String mybatisLogs) {
-        if (StringUtils.isBlank(mybatisLogs)) {
-            return StringUtils.EMPTY;
+        if (StringUtil.isBlank(mybatisLogs)) {
+            return StringUtil.EMPTY;
         }
         String lineSeparator = System.lineSeparator();
         if (!mybatisLogs.endsWith(lineSeparator)) {
             mybatisLogs += lineSeparator;
         }
 
-        String preparedSql = StringUtils.EMPTY;
+        String preparedSql = StringUtil.EMPTY;
         Matcher preparingSqlMatcher = PREPARING_PATTERN.matcher(mybatisLogs);
         if (preparingSqlMatcher.find()) {
             preparedSql = preparingSqlMatcher.group(1).trim();
@@ -100,14 +100,14 @@ public class SqlUtil {
         Matcher paramsMatcher = PARAMETER_PATTERN.matcher(mybatisLogs);
         if (paramsMatcher.find()) {
             String params = paramsMatcher.group(1);
-            if (StringUtils.isBlank(params)) {
+            if (StringUtil.isBlank(params)) {
                 return format(preparedSql);
             }
 
-            String[] paramsArr = StringUtils.split(params, COMMA);
+            String[] paramsArr = StringUtil.split(params, COMMA);
             for (String param : paramsArr) {
                 String value = Parameter.of(param).getValue();
-                preparedSql = StringUtils.replaceOnce(preparedSql, PALACE_HOLDER, value);
+                preparedSql = StringUtil.replaceOnce(preparedSql, PALACE_HOLDER, value);
             }
         }
 
